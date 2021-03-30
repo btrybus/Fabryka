@@ -15,10 +15,18 @@ namespace Fabryka1.Controllers
         private ModelFabrykiContainer db = new ModelFabrykiContainer();
 
         // GET: Maszyna
-        public ActionResult Index()
+        public ActionResult Index(string search)
         {
-            var maszynaSet = db.MaszynaSet.Include(m => m.Hala);
-            return View(maszynaSet.ToList());
+            if (string.IsNullOrEmpty(search))
+            {
+                var maszynaSet = db.MaszynaSet.Include(m => m.Hala).OrderBy(m => m.Nazwa);
+                return View(maszynaSet.ToList());
+            }
+            else
+            {
+                var maszynaSet = db.MaszynaSet.Include(m => m.Hala).Where(m => m.Nazwa.Contains(search)).OrderBy(m => m.Nazwa);
+                return View(maszynaSet.ToList());
+            }
         }
 
         // GET: Maszyna/Details/5
